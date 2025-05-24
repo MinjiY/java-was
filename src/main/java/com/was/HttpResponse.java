@@ -82,9 +82,7 @@ public class HttpResponse {
         try {
             //out.writeBytes(HTTP_VERSION);
             if(status.getCode() != HttpStatus.OK.getCode()){
-                System.out.println(hostRoot+errorPage.get(status.getCode()));
-                body = Files.readAllBytes(Path.of(hostRoot+errorPage.get(status.getCode())));
-                System.out.println("123");
+                body = Files.readAllBytes(Path.of(hostRoot + errorPage.get(status.getCode())));
             }
             System.out.println(hostRoot);
             System.out.println(hostRoot+errorPage.get(status.getCode()));
