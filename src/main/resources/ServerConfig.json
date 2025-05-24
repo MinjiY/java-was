@@ -3,7 +3,7 @@
   "threads": 50,
   "virtualHosts": {
     "client1.com": {
-      "httpRoot": "src/main/java/com/was/app1", // 호스트 별로 접근 HTTP_ROOT 다르게
+      "httpRoot": "src/main/java/com/was/app1",
       "errorPage": {
         "403": "/static/403.html",
         "404": "/static/404.html",
@@ -18,7 +18,7 @@
         "500": "/static/500.html"
       }
     },
-    "_default": {                 // fallback용이므로 서버에서 발생할 수 있는 모든 에러에 대한 html 경로를 갖고있어야함!
+    "_default": {
       "httpRoot": "src/main/java/com/was/servlet",
       "errorPage": {
         "403": "/static/403.html",
