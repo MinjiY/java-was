@@ -1,22 +1,21 @@
 package com.was;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.was.ResponseUtils.formatResponseHeader;
-
-
 public class HttpResponse {
-    private static final String HTTP_VERSION = "HTTP/1.1 ";
-    private static final String EOF = "\r\n";
-    private static final String CONTENT_TYPE = "text/html;charset=utf-8";
+    private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    private static final String HTTP_VERSION = "HTTP/1.1";
+    private static final String CRLF = "\r\n";
+    private static final String DEFAULT_CONTENT_TYPE = "text/html;charset=utf-8";
+
     private static Map<String, String> header = new ConcurrentHashMap<>();
-    //private static header;
     private byte[] body;
     private HttpStatus status;
 
@@ -40,55 +39,40 @@ public class HttpResponse {
     public void setStatus(HttpStatus status){
         this.status = status;
     }
-    public HttpStatus getStatus(){
-        return this.status;
-    }
 
-    public void response(Path dir){
-        try {
-            byte[] responseBody = Files.readAllBytes(dir);
-            out.writeBytes(HTTP_VERSION);
-            out.writeBytes(EOF);
-            header.put(String.valueOf(status.getCode()), HttpStatus.getMessageByCode(status.getCode()));
-            header.put(ResponseHeaderAttribute.CONTENT_LENGTH.getAttribute(), String.valueOf(responseBody.length));
-            header.put(ResponseHeaderAttribute.CONTENT_TYPE.getAttribute(), CONTENT_TYPE);
-            Map<String, String> headers = header;
-            for (Map.Entry<String, String> keyAndValue : headers.entrySet()) {
-                out.writeBytes(formatResponseHeader(keyAndValue));
-            }
-            out.writeBytes(EOF);
-            out.write(body, 0, body.length);
-            out.flush();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
     public void response(String hostRoot, Map<Integer, String> errorPage) {
         try {
-            //out.writeBytes(HTTP_VERSION);
-            if(status.getCode() != HttpStatus.OK.getCode()){
-                body = Files.readAllBytes(Path.of(hostRoot + errorPage.get(status.getCode())));
+            if (status.getCode() != HttpStatus.OK.getCode()) {
+                String errorPath = errorPage.get(status.getCode());
+                if (errorPath != null) {
+                    Path fullPath = Path.of(hostRoot, errorPath);
+                    if (Files.exists(fullPath)) {
+                        setBody(Files.readAllBytes(fullPath));
+                    }
+                }
             }
-            System.out.println(hostRoot);
-            System.out.println(hostRoot+errorPage.get(status.getCode()));
-            out.writeBytes(HttpStatus.getMessageByCode(status.getCode())+EOF);
-            header.put(ResponseHeaderAttribute.CONTENT_LENGTH.getAttribute(), String.valueOf(body.length));
-            header.put(ResponseHeaderAttribute.CONTENT_TYPE.getAttribute(), CONTENT_TYPE);
-            Map<String, String> headers = header;
-            for (Map.Entry<String, String> keyAndValue : headers.entrySet()) {
-                out.writeBytes(formatResponseHeader(keyAndValue));
-            }
-            out.writeBytes(EOF);
-            out.write(body, 0, body.length);
+            setHeader(ResponseHeaderAttribute.CONTENT_LENGTH, body.length);
+            setHeader(ResponseHeaderAttribute.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
 
-            //byte[] theData = Files.readAllBytes(theFile.toPath());
-//            if (version.startsWith("HTTP/")) { // send a MIME header
-//                sendHeader(out, "HTTP/1.0 200 OK", contentType, theData.length);
-//            }
-            out.flush();
+            writeResponse();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("Failed to write HTTP response to client (status= {}: )", status.getCode(), e);
         }
+    }
+        private void writeResponse() throws IOException {
+            // Status Line
+            out.writeBytes(HTTP_VERSION + " " + status.getCode() + " " + status.getMessage() + CRLF);
+
+            // Headers
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                out.writeBytes(entry.getKey() + ": " + entry.getValue() + CRLF);
+            }
+            // header 와 body 사이 빈줄 필요
+            out.writeBytes(CRLF);
+
+            // Body
+            out.write(body);
+            out.flush();
+
     }
 }
