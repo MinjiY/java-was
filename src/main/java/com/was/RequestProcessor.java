@@ -59,11 +59,15 @@ public class RequestProcessor implements Runnable {
             HttpResponse httpResponse = new HttpResponse(raw);
 
             Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
-            RequestValidatorChain.defaultChain().validate(httpRequest, httpResponse, target); // 403 에러
-            SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri()); // TODO: 에러처리하기
+            URIValidatorChain.defaultChain().validate(httpRequest, httpResponse, target); // 403 에러
 
-            if (simpleServlet != null) {
-                simpleServlet.service(httpRequest, httpResponse);
+            try {
+                SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri(), httpResponse);
+                if (simpleServlet != null) {
+                    simpleServlet.service(httpRequest, httpResponse);
+                }
+            }catch (RuntimeException e){
+                e.printStackTrace();
             }
             httpResponse.response(serverConfig.getVirtualHosts().get(host).getHttpRoot().toString(), serverConfig.getVirtualHosts().get(host).getErrorPage());
 //            else if(simpleServlet == null) {
