@@ -1,7 +1,6 @@
 package com.was.validator;
 
 import com.was.HttpRequest;
-import com.was.HttpResponse;
 import com.was.exception.AccessDeniedException;
 import com.was.exception.ExceptionCode;
 

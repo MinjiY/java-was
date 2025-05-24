@@ -1,6 +1,5 @@
 {
   "port": 8080,
-  "documentRoot": "src/main/java/com/was",
   "threads": 50,
   "virtualHosts": {
     "client1.com": {

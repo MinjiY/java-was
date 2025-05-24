@@ -12,7 +12,6 @@ import java.util.Map;
 
 public class ServerConfig{
     public int port;
-    public Path documentRoot;
     public int threads;
     public Map<String, HostConfig> virtualHosts;
     private static ServerConfig INSTANCE;
@@ -23,7 +22,6 @@ public class ServerConfig{
                         Map<String, HostConfig> virtualHosts) {
 
         this.port         = port;
-        this.documentRoot = documentRoot;
         this.threads      = threads;
         // 외부 수정 방지용 불변 래퍼
         this.virtualHosts = virtualHosts == null
@@ -59,10 +57,6 @@ public class ServerConfig{
         return port;
     }
 
-    public Path getDocumentRoot() {
-        return documentRoot;
-    }
-
     public int getThreads() {
         return threads;
     }
@@ -75,7 +69,6 @@ public class ServerConfig{
     public String toString() {
         return "ServerConfig{" +
                 "port=" + port +
-                ", documentRoot=" + documentRoot +
                 ", threads=" + threads +
                 ", virtualHosts=" + virtualHosts +
                 '}';
