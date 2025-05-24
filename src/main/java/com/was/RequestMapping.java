@@ -16,7 +16,7 @@ public class RequestMapping {
     }
 
 
-    public static SimpleServlet getServlet(String uri, HttpResponse response)
+    public static SimpleServlet getServlet(String uri)
     {
         // 미리 정의해둔 클래스
         if (servletMap.containsKey(uri)) {
@@ -24,7 +24,7 @@ public class RequestMapping {
         }
 
         // 동적 로딩한 클래스
-        SimpleServlet servlet = loadServletDynamically(uri, response);
+        SimpleServlet servlet = loadServletDynamically(uri);
         if (servlet != null) {
             servletMap.put(uri, servlet);
         }
@@ -32,7 +32,7 @@ public class RequestMapping {
         return servlet;
     }
 
-    private static SimpleServlet loadServletDynamically(String uri, HttpResponse response){
+    private static SimpleServlet loadServletDynamically(String uri){
         // '/' 제거 후 '.' 기준으로 패키지와 클래스 분리
         String cleanedUri = uri.startsWith("/") ? uri.substring(1) : uri;
         String className = "com.was";
@@ -42,7 +42,7 @@ public class RequestMapping {
             return (SimpleServlet) clazz.getDeclaredConstructor().newInstance();
         }catch (Exception e) {
             e.printStackTrace();
-            throw new ResourceNotFoundException(ExceptionCode.RESOURCE_NOT_FOUND, response);
+            throw new ResourceNotFoundException(ExceptionCode.RESOURCE_NOT_FOUND);
         }
     }
 

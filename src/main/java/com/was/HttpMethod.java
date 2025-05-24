@@ -20,7 +20,7 @@ public enum HttpMethod {
                 return httpMethod;
             }
         }
-        return HttpMethod.GET;
+        throw new IllegalArgumentException();
     }
 
 }

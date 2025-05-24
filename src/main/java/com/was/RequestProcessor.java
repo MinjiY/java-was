@@ -1,6 +1,8 @@
 package com.was;
 
 import com.was.config.ServerConfig;
+import com.was.exception.AccessDeniedException;
+import com.was.exception.ResourceNotFoundException;
 import com.was.servlet.SimpleServlet;
 import com.was.validator.URIValidatorChain;
 
@@ -54,52 +56,32 @@ public class RequestProcessor implements Runnable {
                 }
             }
             host =  (host.equals("localhost") || host.equals("127.0.0.1")) ?  "_default" : host;
-
             HttpRequest httpRequest = new HttpRequest(requestLine);
             HttpResponse httpResponse = new HttpResponse(raw);
-
             Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
-            URIValidatorChain.defaultChain().validate(httpRequest, httpResponse, target); // 403 에러
-
             try {
-                SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri(), httpResponse);
+                // 1. 유효성 검사
+                URIValidatorChain.defaultChain().validate(httpRequest, target);
+                // 2. 서블릿 로딩 및 실행
+                SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri());
                 if (simpleServlet != null) {
                     simpleServlet.service(httpRequest, httpResponse);
                 }
-            }catch (RuntimeException e){
-                e.printStackTrace();
+
+            } catch (AccessDeniedException e) {
+                httpResponse.setStatus(HttpStatus.FORBIDDEN);
+                //httpResponse.setBody(("<h1>403 Forbidden</h1>").getBytes());
+                logger.warning("Access denied: " + e.getMessage());
+            } catch (ResourceNotFoundException e) {
+                httpResponse.setStatus(HttpStatus.NOT_FOUND);
+                //httpResponse.setBody(("<h1>404 Not Found</h1>").getBytes());
+                logger.warning("Resource not found: " + e.getMessage());
+            } catch (Exception e) {
+                httpResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+                //httpResponse.setBody(("<h1>500 Internal Server Error</h1>").getBytes());
+                logger.log(Level.SEVERE, "Unhandled exception", e);
             }
             httpResponse.response(serverConfig.getVirtualHosts().get(host).getHttpRoot().toString(), serverConfig.getVirtualHosts().get(host).getErrorPage());
-//            else if(simpleServlet == null) {
-//                    // can't find the file
-//                    String body = new StringBuilder("<HTML>\r\n")
-//                            .append("<HEAD><TITLE>File Not Found</TITLE>\r\n")
-//                            .append("</HEAD>\r\n")
-//                            .append("<BODY>")
-//                            .append("<H1>HTTP Error 404: File Not Found</H1>\r\n")
-//                            .append("</BODY></HTML>\r\n")
-//                            .toString();
-//                    if (httpRequest.getVersion().startsWith("HTTP/")) { // send a MIME header
-//                        sendHeader(out, "HTTP/1.0 404 File Not Found", "text/html; charset=utf-8", body.length());
-//                    }
-//                    out.write(body);
-//                    out.flush();
-//
-//                }
-
-//            } else {
-//                // method does not equal "GET"
-//                String body = new StringBuilder("<HTML>\r\n").append("<HEAD><TITLE>Not Implemented</TITLE>\r\n").append("</HEAD>\r\n")
-//                        .append("<BODY>")
-//                        .append("<H1>HTTP Error 501: Not Implemented</H1>\r\n")
-//                        .append("</BODY></HTML>\r\n").toString();
-//                if (version.startsWith("HTTP/")) { // send a MIME header
-//                    sendHeader(out, "HTTP/1.0 501 Not Implemented",
-//                            "text/html; charset=utf-8", body.length());
-//                }
-//                out.write(body);
-//                out.flush();
-//            }
         } catch (IOException ex) {
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
         } finally {

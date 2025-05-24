@@ -7,5 +7,5 @@ import java.nio.file.Path;
 
 @FunctionalInterface
 public interface RequestValidator {
-    void validate(HttpRequest request, HttpResponse response, Path target);
+    void validate(HttpRequest request, Path target);
 }

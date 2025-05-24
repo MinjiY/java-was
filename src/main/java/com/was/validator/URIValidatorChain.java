@@ -30,36 +30,28 @@ public class URIValidatorChain implements RequestValidator {
     }
 
     @Override
-    public void validate(HttpRequest request, HttpResponse response, Path target){
+    public void validate(HttpRequest request, Path target){
         for (RequestValidator v : validators) {
-            v.validate(request, response, target);    // 실패 시 예외 throw → 즉시 상위 catch
+            v.validate(request, target);    // 실패 시 예외 throw → 즉시 상위 catch
         }
     }
 
 
     public static URIValidatorChain defaultChain() { // 매개변수에 설정파일을 추가해서 규칙에대한 행동을 미리 정의
         return new Builder()
-                .add((request, response, target) -> {          // .exe 차단
+                .add((request, target) -> {          // .exe 차단
                     // 어떤 경로든 마지막의 fileName을 가져옴
-                    try {
-                        String fileName = target.toString().substring(target.toString().lastIndexOf('/') + 1);
-                        if (fileName.lastIndexOf('.') != -1 // 점이 있고
-                                && "exe".equalsIgnoreCase(
-                                fileName.substring(fileName.lastIndexOf('.') + 1))) { // exe
-                            throw new AccessDeniedException(ExceptionCode.ACCESS_DENIED, response);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    String fileName = target.toString().substring(target.toString().lastIndexOf('/') + 1);
+                    if (fileName.lastIndexOf('.') != -1 // 점이 있고
+                            && "exe".equalsIgnoreCase(
+                            fileName.substring(fileName.lastIndexOf('.') + 1))) { // exe
+                        throw new AccessDeniedException(ExceptionCode.ACCESS_DENIED);
                     }
                 })
-                .add((request, response, target) -> {          // 상위 경로 탐색하는지 확인
-                    try {
+                .add((request, target) -> {          // 상위 경로 탐색하는지 확인
                         // normalize한 경로랑 실제 요청한 uri 비교, 다르면 에러
-                        if (!target.toString().equals(request.getUri())) {
-                            throw new AccessDeniedException(ExceptionCode.ACCESS_DENIED, response);
-                        }
-                    } catch (Exception e){
-                        e.printStackTrace();
+                    if (!target.toString().equals(request.getUri())) {
+                        throw new AccessDeniedException(ExceptionCode.ACCESS_DENIED);
                     }
                 })
                 // 규칙 추가 ...

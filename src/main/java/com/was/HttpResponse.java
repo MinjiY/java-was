@@ -30,20 +30,6 @@ public class HttpResponse {
     public void setBody(byte[] body){
         this.body = body;
     }
-//    public void setHeaders(HttpStatus status, int length) {
-//        StringBuilder headerString = new StringBuilder()
-//                .append("HTTP/1.1 ")
-//                .append(status.getCode()).append(' ')
-//                .append(status.getMessage()).append(EOF)
-//                .append("Date: ")
-//                .append(new Date())
-//                .append(EOF)
-//                .append("Server: HTTP 2.0").append(EOF)
-//                .append("Content-Length: ").append(length).append(EOF)
-//                .append("Content-Type: ").append(CONTENT_TYPE).append(EOF)
-//                .append(EOF);
-//       header = headerString.toString();
-//    }
 
     public void setHeader(ResponseHeaderAttribute attribute, String value){
         header.put(attribute.name(), value);
