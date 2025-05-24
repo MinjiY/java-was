@@ -4,11 +4,14 @@ import com.was.exception.ExceptionCode;
 import com.was.exception.ResourceNotFoundException;
 import com.was.servlet.Hello;
 import com.was.servlet.SimpleServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RequestMapping {
+    private static final Logger logger = LoggerFactory.getLogger(RequestMapping.class);
     public static Map<String, SimpleServlet> servletMap = new ConcurrentHashMap<>();
 
     static {
@@ -41,7 +44,6 @@ public class RequestMapping {
             Class<?> clazz = Class.forName(className + "." + cleanedUri);
             return (SimpleServlet) clazz.getDeclaredConstructor().newInstance();
         }catch (Exception e) {
-            e.printStackTrace();
             throw new ResourceNotFoundException(ExceptionCode.RESOURCE_NOT_FOUND);
         }
     }
