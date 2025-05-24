@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,6 +52,7 @@ public class HttpResponse {
                     }
                 }
             }
+            setHeader(ResponseHeaderAttribute.DATE, String.valueOf(new Date()));
             setHeader(ResponseHeaderAttribute.CONTENT_LENGTH, body.length);
             setHeader(ResponseHeaderAttribute.CONTENT_TYPE, DEFAULT_CONTENT_TYPE);
 
