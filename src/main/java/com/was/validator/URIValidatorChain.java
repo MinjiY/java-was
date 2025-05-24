@@ -9,10 +9,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class RequestValidatorChain implements RequestValidator {
+public class URIValidatorChain implements RequestValidator {
     private final List<RequestValidator> validators;
 
-    private RequestValidatorChain(List<RequestValidator> validators) {
+    private URIValidatorChain(List<RequestValidator> validators) {
         this.validators = List.copyOf(validators);
     }
 
@@ -24,8 +24,8 @@ public class RequestValidatorChain implements RequestValidator {
             return this;
         }
 
-        public RequestValidatorChain build() {
-            return new RequestValidatorChain(list);
+        public URIValidatorChain build() {
+            return new URIValidatorChain(list);
         }
     }
 
@@ -37,7 +37,7 @@ public class RequestValidatorChain implements RequestValidator {
     }
 
 
-    public static RequestValidatorChain defaultChain() { // 매개변수에 설정파일을 추가해서 규칙에대한 행동을 미리 정의
+    public static URIValidatorChain defaultChain() { // 매개변수에 설정파일을 추가해서 규칙에대한 행동을 미리 정의
         return new Builder()
                 .add((request, response, target) -> {          // .exe 차단
                     // 어떤 경로든 마지막의 fileName을 가져옴

@@ -2,7 +2,7 @@ package com.was;
 
 import com.was.config.ServerConfig;
 import com.was.servlet.SimpleServlet;
-import com.was.validator.RequestValidatorChain;
+import com.was.validator.URIValidatorChain;
 
 import java.io.*;
 import java.net.Socket;
