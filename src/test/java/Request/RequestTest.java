@@ -2,12 +2,15 @@ package Request;
 
 import com.was.HttpMethod;
 import com.was.HttpRequest;
+import com.was.exception.AccessDeniedException;
 import com.was.exception.NotSupportedHttpMethodException;
+import com.was.validator.URIValidatorChain;
 import org.hamcrest.MatcherAssert;
 
 import org.junit.Test;
 
 import java.io.*;
+import java.nio.file.Path;
 
 import static org.hamcrest.Matchers.is;
 public class RequestTest {
@@ -47,8 +50,20 @@ public class RequestTest {
 
     // 요청라인 메서드에 잘못된 메서드명으로 요청 테스트
     @Test(expected = IllegalArgumentException.class)
-    public void test() throws Exception {
+    public void testHttpMethodTypo() throws Exception {
         HttpRequest request = new HttpRequest(new BufferedReader(new FileReader(testDirectory + "HTTP_MethodTypo.txt")));
     }
 
+    // 루트경로 접근
+    @Test(expected = AccessDeniedException.class)
+    public void test() throws Exception {
+        HttpRequest request = new HttpRequest(new BufferedReader(new FileReader(testDirectory + "HTTP_AccessParent.txt")));
+        Path uri = Path.of(request.getUri());
+        Path uriNormalized =  uri.normalize();
+
+
+//        Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
+
+ //       URIValidatorChain.defaultChain().validate();
+    }
 }
