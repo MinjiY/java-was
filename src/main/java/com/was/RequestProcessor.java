@@ -33,21 +33,15 @@ public class RequestProcessor implements Runnable {
                         new InputStreamReader(connection.getInputStream(), "UTF-8"));
                 OutputStream raw = new BufferedOutputStream(connection.getOutputStream()))
         {
-            String requestLine = in.readLine();
-            String line;
-            String host =""; // vHost
-            while (!(line = in.readLine()).isEmpty()) {
-                if (line.toLowerCase().startsWith("host:")) {
-                    host = line.substring(5).trim().split(":")[0];
-                }
-            }
-            host =  (host.equals("localhost") || host.equals("127.0.0.1")) ?  "_default" : host;
+            HttpRequest httpRequest = new HttpRequest(in);
+            HttpResponse httpResponse = new HttpResponse(raw);
+
+            String host = httpRequest.getHeaders().get("Host");
 
             logger.info(connection.getRemoteSocketAddress().toString());
             logger.info("Request received from Host: {}", host);
 
-            HttpRequest httpRequest = new HttpRequest(requestLine);
-            HttpResponse httpResponse = new HttpResponse(raw);
+
             Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
             try {
                 // 1. 유효성 검사

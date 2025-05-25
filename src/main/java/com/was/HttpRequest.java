@@ -17,15 +17,24 @@ public class HttpRequest {
      private String version;
      private String requestLine;
 
-//    public HttpRequest(InputStream in) throws IOException {
-//        readLine(new BufferedReader(new InputStreamReader(in, "UTF-8")));
-//    }
-    public HttpRequest(String requestLine) throws IOException{
-        this.requestLine = requestLine;
-        readLine();
+    public HttpRequest(BufferedReader in) throws IOException{
+        readLine(in);
     }
 
-    private void readLine(){
+    private void readLine(BufferedReader in) throws IOException{
+        requestLine = in.readLine();
+        String line="";;
+        String host =""; // vHost
+        while (!(line = in.readLine()).isEmpty()) {
+            if (line.toLowerCase().startsWith("host:")) {
+                host = line.substring(5).trim().split(":")[0];
+            }
+        }
+        host =  (host.equals("localhost") || host.equals("127.0.0.1")) ?  "_default" : host;
+
+        // 지원하는 host 확인?
+        headers.put("Host", host);
+
         // method, uri, version
         String[] splitLine = requestLine.split(" ");
         this.method = HttpMethod.valueOf(splitLine[0]);
@@ -50,6 +59,10 @@ public class HttpRequest {
 
     public String getVersion(){
         return this.version;
+    }
+
+    public Map<String, String> getHeaders(){
+        return this.headers;
     }
 
 }
