@@ -5,7 +5,7 @@ import com.was.exception.AccessDeniedException;
 import com.was.exception.ExceptionCode;
 import com.was.exception.NotSupportedHttpMethodException;
 import com.was.exception.ResourceNotFoundException;
-import com.was.servlet.SimpleServlet;
+import com.was._default.SimpleServlet;
 import com.was.validator.URIValidatorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -39,10 +39,6 @@ public class ServerConfig{
 
     // ServerConfig instance main에서 한번만 로딩
     public static void load(Path jsonFile) throws IOException {
-        if(INSTANCE != null){
-            throw new IllegalStateException("ServerConfig is already initialized.");
-        }
-
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Path.class, new PathAdapter())
                 .create();

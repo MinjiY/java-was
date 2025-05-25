@@ -3,8 +3,8 @@ package com.was;
 import com.was.config.ServerConfig;
 import com.was.exception.ExceptionCode;
 import com.was.exception.ResourceNotFoundException;
-import com.was.servlet.KSTTime;
-import com.was.servlet.SimpleServlet;
+import com.was._default.KSTTime;
+import com.was._default.SimpleServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

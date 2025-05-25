@@ -1,4 +1,4 @@
-package com.was.servlet;
+package com.was._default;
 
 
 import com.was.HttpMethod;

@@ -3,7 +3,7 @@ package com.was.app1.service;
 import com.was.HttpRequest;
 import com.was.HttpResponse;
 import com.was.HttpStatus;
-import com.was.servlet.HttpServelet;
+import com.was._default.HttpServelet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

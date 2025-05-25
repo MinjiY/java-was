@@ -2,27 +2,29 @@ package Request;
 
 import com.was.HttpMethod;
 import com.was.HttpRequest;
+import com.was.config.ServerConfig;
 import com.was.exception.AccessDeniedException;
 import com.was.exception.NotSupportedHttpMethodException;
 import com.was.validator.URIValidatorChain;
 import org.hamcrest.MatcherAssert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.*;
 import java.nio.file.Path;
 
+
 import static org.hamcrest.Matchers.is;
 public class RequestTest {
 
-//    private HttpRequest request;
     private String testDirectory = "src/test/resources/Request/";
+    private static ServerConfig serverConfig;
 
-//    @Before
-//    public void setUp() throws Exception {
-//            request = new HttpRequest(new BufferedReader(new FileReader(testDirectory+"Hello.txt")));
-//    }
-
+    @BeforeClass
+    public static void setUp() throws Exception {
+        serverConfig = ServerConfig.getInstance();
+    }
     // 기본 요청 Test
     @Test
     public void parseGetRequestLine() throws Exception {
@@ -56,14 +58,9 @@ public class RequestTest {
 
     // 루트경로 접근
     @Test(expected = AccessDeniedException.class)
-    public void test() throws Exception {
+    public void testAccessParentPath() throws Exception {
         HttpRequest request = new HttpRequest(new BufferedReader(new FileReader(testDirectory + "HTTP_AccessParent.txt")));
-        Path uri = Path.of(request.getUri());
-        Path uriNormalized =  uri.normalize();
-
-
-//        Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
-
- //       URIValidatorChain.defaultChain().validate();
+        Path target = serverConfig.getVirtualHosts().get("_default").getHttpRoot().resolve(request.getUri()).normalize();
+        URIValidatorChain.defaultChain().validate(request, target);
     }
 }

@@ -23,7 +23,7 @@
       }
     },
     "_default": {
-      "httpRoot": "src/main/java/com/was/servlet",
+      "httpRoot": "src/main/java/com/was/_default",
       "errorPage": {
         "400": "/static/400.html",
         "403": "/static/403.html",
