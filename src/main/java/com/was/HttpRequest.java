@@ -2,13 +2,15 @@ package com.was;
 
 import com.was.exception.ExceptionCode;
 import com.was.exception.NotSupportedHttpMethodException;
+import com.was.servlet.KSTTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
-
     private Map<String, String> headers = new HashMap<>();
     private Map<String, String> params = new HashMap<>();
     // HTTP 요청에 대한 상태를 가질 수 없음
@@ -23,9 +25,9 @@ public class HttpRequest {
 
     private void readLine(BufferedReader in) throws IOException{
         requestLine = in.readLine();
-        String line="";;
+        String line="";
         String host =""; // vHost
-        while (!(line = in.readLine()).isEmpty()) {
+        while ((line = in.readLine()) != null && !line.isEmpty()) {
             if (line.toLowerCase().startsWith("host:")) {
                 host = line.substring(5).trim().split(":")[0];
             }

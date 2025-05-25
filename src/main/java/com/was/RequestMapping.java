@@ -2,7 +2,7 @@ package com.was;
 
 import com.was.exception.ExceptionCode;
 import com.was.exception.ResourceNotFoundException;
-import com.was.servlet.Hello;
+import com.was.servlet.KSTTime;
 import com.was.servlet.SimpleServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ public class RequestMapping {
     public static Map<String, SimpleServlet> servletMap = new ConcurrentHashMap<>();
 
     static {
-        servletMap.put("/Hello" , new Hello());
+        servletMap.put("/KSTTime" , new KSTTime());
     }
 
 

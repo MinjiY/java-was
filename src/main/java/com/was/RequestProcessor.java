@@ -41,7 +41,6 @@ public class RequestProcessor implements Runnable {
             logger.info(connection.getRemoteSocketAddress().toString());
             logger.info("Request received from Host: {}", host);
 
-
             Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
             try {
                 // 1. 유효성 검사

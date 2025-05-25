@@ -5,22 +5,27 @@
     "client1.com": {
       "httpRoot": "src/main/java/com/was/app1",
       "errorPage": {
+        "400": "/static/400.html",
         "403": "/static/403.html",
         "404": "/static/404.html",
-        "500": "/static/500.html"
+        "500": "/static/500.html",
+        "501": "/static/501.html"
       }
     },
     "client2.com": {
       "httpRoot": "src/main/java/com/was/app2",
       "errorPage": {
+        "400": "/static/400.html",
         "403": "/static/403.html",
         "404": "/static/404.html",
-        "500": "/static/500.html"
+        "500": "/static/500.html",
+        "501": "/static/501.html"
       }
     },
     "_default": {
       "httpRoot": "src/main/java/com/was/servlet",
       "errorPage": {
+        "400": "/static/400.html",
         "403": "/static/403.html",
         "404": "/static/404.html",
         "500": "/static/500.html",

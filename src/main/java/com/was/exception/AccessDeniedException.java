@@ -1,7 +1,5 @@
 package com.was.exception;
 
-import com.was.HttpResponse;
-import com.was.HttpStatus;
 
 public class AccessDeniedException extends RuntimeException{
 

@@ -11,14 +11,13 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ServerConfig{
-    public int port;
-    public int threads;
+    public Integer port;
+    public Integer threads;
     public Map<String, HostConfig> virtualHosts;
     private static ServerConfig INSTANCE;
 
-    public ServerConfig(int port,
-                        Path documentRoot,
-                        int threads,
+    public ServerConfig(Integer port,
+                        Integer threads,
                         Map<String, HostConfig> virtualHosts) {
 
         this.port         = port;
@@ -53,7 +52,7 @@ public class ServerConfig{
         }
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
