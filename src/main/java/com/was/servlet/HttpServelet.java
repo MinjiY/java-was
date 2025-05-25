@@ -18,7 +18,7 @@ public abstract class HttpServelet implements SimpleServlet{
            }else if(httpMethod == HttpMethod.POST){
                 doPost(req,res);
            }
-           // ...
+           // PUT, DELETE ...
         }catch (Exception e){
             e.printStackTrace();
         }
