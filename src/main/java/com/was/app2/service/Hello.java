@@ -1,8 +1,9 @@
-package com.was.app1.service;
+package com.was.app2.service;
 
 import com.was.HttpRequest;
 import com.was.HttpResponse;
 import com.was.HttpStatus;
+import com.was.app1.HttpServelet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

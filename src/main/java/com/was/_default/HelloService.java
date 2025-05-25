@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
-public class Hello extends HttpServelet {
-    private static final Logger logger = LoggerFactory.getLogger(Hello.class);
+public class HelloService extends HttpServelet {
+    private static final Logger logger = LoggerFactory.getLogger(HelloService.class);
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         httpResponse.setBody(("Hello").getBytes(StandardCharsets.UTF_8));
         httpResponse.setStatus(HttpStatus.OK);

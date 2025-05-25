@@ -1,4 +1,4 @@
-package com.was.app1.service;
+package com.was.app1;
 
 import com.was.HttpRequest;
 import com.was.HttpResponse;

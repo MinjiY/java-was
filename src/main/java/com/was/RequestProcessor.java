@@ -48,7 +48,7 @@ public class RequestProcessor implements Runnable {
                 // 1. 유효성 검사
                 URIValidatorChain.defaultChain().validate(httpRequest, target);
                 // 2. 서블릿 로딩 및 실행
-                SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri());
+                SimpleServlet simpleServlet = RequestMapping.getServlet(host, httpRequest.getUri());
                 if (simpleServlet != null) {
                     simpleServlet.service(httpRequest, httpResponse);
                 }

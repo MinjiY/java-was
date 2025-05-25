@@ -1,9 +1,10 @@
-package com.was.app1.service;
+package com.was.app2.service;
 
 
 import com.was.HttpMethod;
 import com.was.HttpRequest;
 import com.was.HttpResponse;
+import com.was.app1.SimpleServlet;
 
 import java.io.IOException;
 
