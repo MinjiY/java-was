@@ -1,5 +1,7 @@
 package com.was;
 
+import java.util.Arrays;
+
 public enum HttpMethod {
     GET("GET"), POST("POST");
 
@@ -20,7 +22,7 @@ public enum HttpMethod {
                 return httpMethod;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("요청 라인에서 알 수 없는 메서드 '" + method + "' 가 감지되었습니다. 지원되는 메서드: " + Arrays.toString(HttpMethod.values()));
     }
 
 }

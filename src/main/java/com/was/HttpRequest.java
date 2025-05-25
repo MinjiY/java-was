@@ -1,5 +1,8 @@
 package com.was;
 
+import com.was.exception.ExceptionCode;
+import com.was.exception.NotSupportedHttpMethodException;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,17 +25,19 @@ public class HttpRequest {
         readLine();
     }
 
-    private void readLine() throws IOException {
+    private void readLine(){
+        // method, uri, version
         String[] splitLine = requestLine.split(" ");
         this.method = HttpMethod.valueOf(splitLine[0]);
-        System.out.println(splitLine[0]);
-        System.out.println(splitLine[1]);
         this.Uri = splitLine[1];
         if(splitLine.length > 2){
             version = splitLine[2];
         }
-        // get, post, put 등 확인
-        // get이면서 ?이 있으면 queryParam 확인
+        if(method != HttpMethod.GET){
+            throw new NotSupportedHttpMethodException(ExceptionCode.NOT_IMPLEMENTED);
+        }
+
+        // uri ?
     }
 
     public HttpMethod getMethod(){

@@ -2,6 +2,7 @@ package com.was.exception;
 
 public enum ExceptionCode {
 
+    BAD_REQUEST(400, "Bad Request"),
     ACCESS_DENIED(403, "Access Denied"),
     RESOURCE_NOT_FOUND(404, "Resource Not Found"),
     INTERNAL(500, "Internal Server Error"),
