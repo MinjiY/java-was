@@ -33,20 +33,22 @@ public class RequestProcessor implements Runnable {
                         new InputStreamReader(connection.getInputStream(), "UTF-8"));
                 OutputStream raw = new BufferedOutputStream(connection.getOutputStream()))
         {
-            HttpRequest httpRequest = new HttpRequest(in);
+
+            HttpRequest httpRequest;
+            String host= "_default";
             HttpResponse httpResponse = new HttpResponse(raw);
-
-            String host = httpRequest.getHeaders().get("Host");
-
-            logger.info(connection.getRemoteSocketAddress().toString());
-            logger.info("Request received from Host: {}", host);
-
-            Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
             try {
+
+                httpRequest = new HttpRequest(in);
+                host = httpRequest.getHeaders().get("Host");
+
+                logger.info("Request received from Host: {}", host);
+                Path target = serverConfig.getVirtualHosts().get(host).getHttpRoot().resolve(httpRequest.getUri()).normalize();
+
                 // 1. 유효성 검사
                 URIValidatorChain.defaultChain().validate(httpRequest, target);
                 // 2. 서블릿 로딩 및 실행
-                SimpleServlet simpleServlet = RequestMapping.getServlet(httpRequest.getUri());
+                SimpleServlet simpleServlet = RequestMapping.getServlet(host, httpRequest.getUri());
                 if (simpleServlet != null) {
                     simpleServlet.service(httpRequest, httpResponse);
                 }

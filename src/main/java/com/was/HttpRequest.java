@@ -2,9 +2,6 @@ package com.was;
 
 import com.was.exception.ExceptionCode;
 import com.was.exception.NotSupportedHttpMethodException;
-import com.was.servlet.KSTTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.HashMap;
@@ -19,11 +16,11 @@ public class HttpRequest {
      private String version;
      private String requestLine;
 
-    public HttpRequest(BufferedReader in) throws IOException{
+    public HttpRequest(BufferedReader in) throws IOException, NotSupportedHttpMethodException{
         readLine(in);
     }
 
-    private void readLine(BufferedReader in) throws IOException{
+    private void readLine(BufferedReader in) throws IOException, NotSupportedHttpMethodException{
         requestLine = in.readLine();
         String line="";
         String host =""; // vHost
@@ -32,7 +29,7 @@ public class HttpRequest {
                 host = line.substring(5).trim().split(":")[0];
             }
         }
-        host =  (host.equals("localhost") || host.equals("127.0.0.1")) ?  "_default" : host;
+        host =  (host.equals("localhost") || host.equals("127.0.0.1")) ? "_default" : host;
 
         // 지원하는 host 확인?
         headers.put("Host", host);
